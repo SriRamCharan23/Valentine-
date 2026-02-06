@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💖 For My Piggy 💖</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Pacifico&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 50%, #ffd4e5 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Floating Hearts Background */
+        .heart-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .floating-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.3;
+            animation: float 10s infinite;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Page Container */
+        .page {
+            display: none;
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            padding: 20px;
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Page 1 - Entry */
+        .entry-container {
+            background: white;
+            padding: 50px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        .entry-title {
+            font-size: 2.5em;
+            color: #ff1493;
+            margin-bottom: 15px;
+            font-family: 'Pacifico', cursive;
+        }
+        
+        .entry-subtitle {
+            color: #ff69b4;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        input[type="text"], input[type="date"], textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border: 3px solid #ffb6d9;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-family: 'Quicksand', sans-serif;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #ff1493;
+            box-shadow: 0 0 20px rgba(255, 20, 147, 0.2);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+            box-shadow: 0 5px 20px rgba(255, 20, 147, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 20, 147, 0.6);
+        }
+        
+        .error-msg {
+            color: #ff1493;
+            font-size: 1em;
+            margin-top: 10px;
+            min-height: 25px;
+            font-weight: 600;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        /* Quiz Page */
+        .quiz-container {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .quiz-title {
+            font-size: 2em;
+            color: #ff1493;
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive;
+        }
+        
+        .question {
+            display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .question.active {
+            display: block;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .question-text {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        /* Multiple Choice Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .option-btn {
+            background: white;
+            border: 3px solid #ffb6d9;
+            padding: 15px 20px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-family: 'Quicksand', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .option-btn:hover {
+            background: #fff5f9;
+            border-color: #ff69b4;
+            transform: translateX(5px);
+        }
+        
+        .option-btn.wrong {
+            background: #ffcccc;
+            border-color: #ff6666;
+            animation: wrongShake 0.5s;
+        }
+        
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* Promise Page */
+        .promise-container {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .promise-text {
+            font-size: 1.3em;
+            line-height: 2;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .promise-text strong {
+            color: #ff1493;
+            font-size: 1.2em;
+        }
+        
+        .promise-text em {
+            color: #ff69b4;
+            font-style: italic;
+        }
+        
+        /* Valentine Page */
+        .valentine-container {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .valentine-question {
+            font-size: 2.5em;
+            color: #ff1493;
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive;
+            line-height: 1.4;
+        }
+        
+        .button-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+            min-height: 150px;
+            position: relative;
+        }
+        
+        .valentine-btn {
+            padding: 20px 50px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+        
+        #yesBtn {
+            background: linear-gradient(135deg, #ff1493, #ff69b4);
+            color: white;
+            box-shadow: 0 5px 20px rgba(255, 20, 147, 0.4);
+        }
+        
+        #yesBtn:hover {
+            transform: scale(1.05);
+        }
+        
+        #noBtn {
+            background: #f0f0f0;
+            color: #999;
+            position: absolute;
+            transition: all 0.3s;
+        }
+        
+        .tease-text {
+            font-size: 1.2em;
+            color: #ff69b4;
+            margin-top: 20px;
+            min-height: 30px;
+            font-weight: 600;
+        }
+        
+        /* Final Page */
+        .final-container {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+        }
+        
+        .final-title {
+            font-size: 3em;
+            color: #ff1493;
+            margin-bottom: 30px;
+            font-family: 'Pacifico', cursive;
+        }
+        
+        .final-message {
+            font-size: 1.4em;
+            line-height: 2;
+            color: #333;
+        }
+        
+        .final-message strong {
+            color: #ff1493;
+        }
+        
+        .final-message em {
+            color: #ff69b4;
+            font-style: italic;
+        }
+        
+        /* Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff1493;
+            position: fixed;
+            top: -10px;
+            animation: confetti-fall 3s linear;
+            z-index: 9999;
+        }
+        
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Celebration hearts */
+        .celebration-heart {
+            position: fixed;
+            font-size: 40px;
+            animation: celebration 2s ease-out;
+            z-index: 9999;
+        }
+        
+        @keyframes celebration {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .entry-container, .quiz-container, .promise-container, .valentine-container, .final-container {
+                padding: 30px 20px;
+            }
+            
+            .entry-title, .valentine-question {
+                font-size: 2em;
+            }
+            
+            .valentine-btn {
+                padding: 15px 30px;
+                font-size: 1.2em;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <div class="heart-bg" id="heartBg"></div>
+    
+    <!-- PAGE 1: Entry -->
+    <div class="page active" id="page1">
+        <div class="entry-container">
+            <h1 class="entry-title">🔒 Authorized Lovers Only</h1>
+            <p class="entry-subtitle">Warning: Only ONE person in the universe knows the secret name 🐷💗</p>
+            <input type="text" id="secretInput" placeholder="Enter the cutest pet name ever…">
+            <button class="btn" onclick="checkEntry()">Unlock My Heart 💘</button>
+            <p class="error-msg" id="entryError"></p>
+        </div>
+    </div>
+    
+    <!-- PAGE 2: Quiz -->
+    <div class="page" id="page2">
+        <div class="quiz-container">
+            <h2 class="quiz-title">Pop Quiz: Are You REALLY My Piggy? 🐷💕</h2>
+            
+            <div class="question active" id="q1">
+                <p class="question-text">When did our story officially begin? 📅</p>
+                <div class="options-container">
+                    <button class="option-btn" onclick="checkAnswer(1, 'a')">January 15, 2021</button>
+                    <button class="option-btn" onclick="checkAnswer(1, 'b')">October 1, 2019</button>
+                    <button class="option-btn" onclick="checkAnswer(1, 'c')">December 25, 2020</button>
+                    <button class="option-btn" onclick="checkAnswer(1, 'd')">February 14, 2019</button>
+                </div>
+                <p class="error-msg" id="error1"></p>
+            </div>
+            
+            <div class="question" id="q2">
+                <p class="question-text">Our first date 💑 (The one I'll never forget)</p>
+                <div class="options-container">
+                    <button class="option-btn" onclick="checkAnswer(2, 'a')">January 1, 2021</button>
+                    <button class="option-btn" onclick="checkAnswer(2, 'b')">February 1, 2021</button>
+                    <button class="option-btn" onclick="checkAnswer(2, 'c')">March 15, 2021</button>
+                    <button class="option-btn" onclick="checkAnswer(2, 'd')">Valentine's Day 2021</button>
+                </div>
+                <p class="error-msg" id="error2"></p>
+            </div>
+            
+            <div class="question" id="q3">
+                <p class="question-text">First gift I bought for you 🎁</p>
+                <div class="options-container">
+                    <button class="option-btn" onclick="checkAnswer(3, 'a')">Flowers</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 'b')">Dress</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 'c')">Jewelry</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 'd')">Perfume</button>
+                </div>
+                <p class="error-msg" id="error3"></p>
+            </div>
+            
+            <div class="question" id="q4">
+                <p class="question-text">Our favorite time together 🥰</p>
+                <textarea id="favTime" placeholder="Tell me..."></textarea>
+                <button class="btn" onclick="checkQ4()">Submit</button>
+                <p class="error-msg" id="error4"></p>
+            </div>
+            
+            <div class="question" id="q5">
+                <p class="question-text">One thing you like about me ❤️</p>
+                <input type="text" id="likeAbout" placeholder="Be honest... 🥰">
+                <button class="btn" onclick="checkQ5()">Proceed Before I Fall More 💘</button>
+                <p class="error-msg" id="error5"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PAGE 2.5: Encouragement (Quiz Failed) -->
+    <div class="page" id="page2_5">
+        <div class="promise-container">
+            <p class="promise-text" style="font-size: 2.5em;">😅 Oops!</p>
+            <br>
+            <p class="promise-text"><strong>Listen, Piggy... 🐷</strong></p>
+            <br>
+            <p class="promise-text"><em>I don't want you to lose this quiz!</em></p>
+            <p class="promise-text"><em>You're MY Piggy after all 💕</em></p>
+            <br>
+            <p class="promise-text"><strong>So here's the deal:</strong></p>
+            <p class="promise-text"><em>I'm going to give you ONE more chance...</em></p>
+            <p class="promise-text"><em>Because I believe in you! 🥰</em></p>
+            <br>
+            <p class="promise-text" style="font-size: 0.9em; color: #ff69b4;"><em>(Psst... I've seen you forget our anniversary date too, so no judgment 😂)</em></p>
+            <br>
+            <p class="promise-text"><strong>Let's try again, my forgetful little Piggy! 💖</strong></p>
+            <br><br>
+            <button class="btn" onclick="retryQuiz()">Okay okay, I'll focus this time! 🐷💗</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 3: Promise -->
+    <div class="page" id="page3">
+        <div class="promise-container">
+            <p class="promise-text"><strong>Listen carefully, Piggy…</strong></p>
+            <p class="promise-text"><em>Life will be messy.</em></p>
+            <p class="promise-text"><em>Days won't always be easy.</em></p>
+            <br>
+            <p class="promise-text"><strong>But I promise you this:</strong></p>
+            <br>
+            <p class="promise-text"><em>I will stand with you,</em></p>
+            <p class="promise-text"><em>hold your hand,</em></p>
+            <p class="promise-text"><strong>and love you till my very last breath.</strong></p>
+            <br>
+            <p class="promise-text"><em>This isn't a Valentine promise.</em></p>
+            <p class="promise-text"><em>This is a forever one 💖</em></p>
+            <br><br>
+            <button class="btn" onclick="goToPage4()">Okay… I'm emotional 😭 Continue</button>
+        </div>
+    </div>
+    
+    <!-- PAGE 4: Valentine Question -->
+    <div class="page" id="page4">
+        <div class="valentine-container">
+            <h2 class="valentine-question">Will you be my Valentine…<br>…from now to forever? ❤️</h2>
+            <p class="tease-text" id="teaseText"></p>
+            <div class="button-container">
+                <button class="valentine-btn" id="yesBtn" onclick="handleYes()">YES 💖</button>
+                <button class="valentine-btn" id="noBtn" onclick="handleNo()">NO 🙈</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- PAGE 5: Final -->
+    <div class="page" id="page5">
+        <div class="final-container">
+            <h1 class="final-title">I KNEW IT 😍💖</h1>
+            <p class="final-message"><em>Thank you for being my Valentine,</em></p>
+            <p class="final-message"><em>my Piggy,</em></p>
+            <p class="final-message"><em>my favorite person.</em></p>
+            <br>
+            <p class="final-message"><strong>Sending you all my love 💌</strong></p>
+            <br>
+            <p class="final-message"><em>Now come here… virtually 🤗❤️</em></p>
+            <div style="font-size: 80px; margin-top: 30px;">💋</div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating hearts
+        function createFloatingHearts() {
+            const heartBg = document.getElementById('heartBg');
+            const hearts = ['💖', '💕', '💗', '💝', '💘'];
+            
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                heartBg.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 10000);
+            }, 500);
+        }
+        
+        createFloatingHearts();
+        
+        // PAGE 1: Entry Check
+        const wrongMessages = [
+            "Hmm… close, but my Piggy would know better 🐽",
+            "Nice try 😌 But my heart is smarter than that",
+            "Access denied 🚫 Emotional damage detected",
+            "Wrong answer, but I still love you 😘",
+            "My heart says: TRY AGAIN 💕"
+        ];
+        
+        function checkEntry() {
+            const input = document.getElementById('secretInput');
+            const error = document.getElementById('entryError');
+            const value = input.value.toLowerCase().trim();
+            
+            if (value === 'piggy') {
+                createConfetti();
+                error.style.color = '#00cc00';
+                error.textContent = 'Access granted 🐷💖 Welcome, my favorite human';
+                setTimeout(() => {
+                    goToPage('page2');
+                }, 2000);
+            } else {
+                input.classList.add('shake');
+                error.textContent = wrongMessages[Math.floor(Math.random() * wrongMessages.length)];
+                setTimeout(() => input.classList.remove('shake'), 500);
+            }
+        }
+        
+        // Quiz Questions
+        let wrongAnswerCount = 0;
+        const MAX_WRONG_ANSWERS = 2; // After 2 wrong answers, show encouragement
+        
+        const correctAnswers = {
+            1: 'b', // October 1, 2019
+            2: 'b', // February 1, 2021
+            3: 'b'  // Dress
+        };
+        
+        const q1Wrong = [
+            "Oops! Wrong answer, Piggy! 🐷 Try to remember our special day 😌",
+            "Not quite, my love! Think harder about when we started 💭💗",
+            "Hmm... that's not it, Piggy! Our love story began differently 🥰"
+        ];
+        
+        const q2Wrong = [
+            "Incorrect, Piggy ❌ But I still cherish that you're trying 😘",
+            "Wrong date, love! Think about our magical first date 💕"
+        ];
+        
+        const q3Wrong = [
+            "Nope, Piggy 😆 But I would buy you that too!",
+            "Not the right gift! Remember what made you smile? 🎁"
+        ];
+        
+        function checkAnswer(questionNum, selectedAnswer) {
+            const error = document.getElementById(`error${questionNum}`);
+            const buttons = document.querySelectorAll(`#q${questionNum} .option-btn`);
+            const selectedBtn = event.target;
+            
+            // Disable all buttons temporarily
+            buttons.forEach(btn => btn.style.pointerEvents = 'none');
+            
+            if (selectedAnswer === correctAnswers[questionNum]) {
+                // Don't highlight - just show success message
+                error.style.color = '#00cc00';
+                
+                if (questionNum === 1) {
+                    error.textContent = 'Correct! You remember October 1, 2019! 🥰';
+                } else if (questionNum === 2) {
+                    error.textContent = 'Yes! That magical day 💕';
+                } else if (questionNum === 3) {
+                    error.textContent = 'Perfect! You remember the dress 👗💖';
+                }
+                
+                setTimeout(() => {
+                    if (questionNum === 1) {
+                        nextQuestion('q1', 'q2');
+                    } else if (questionNum === 2) {
+                        nextQuestion('q2', 'q3');
+                    } else if (questionNum === 3) {
+                        nextQuestion('q3', 'q4');
+                    }
+                }, 1500);
+            } else {
+                // Wrong answer - increment counter
+                wrongAnswerCount++;
+                selectedBtn.classList.add('wrong');
+                
+                // Check if they've failed too many times
+                if (wrongAnswerCount >= MAX_WRONG_ANSWERS) {
+                    error.textContent = "Uh oh... too many wrong answers, Piggy! 😅";
+                    setTimeout(() => {
+                        goToPage('page2_5');
+                    }, 1500);
+                    return;
+                }
+                
+                if (questionNum === 1) {
+                    error.textContent = q1Wrong[Math.floor(Math.random() * q1Wrong.length)];
+                } else if (questionNum === 2) {
+                    error.textContent = q2Wrong[Math.floor(Math.random() * q2Wrong.length)];
+                } else if (questionNum === 3) {
+                    error.textContent = q3Wrong[Math.floor(Math.random() * q3Wrong.length)];
+                }
+                
+                // Re-enable buttons and remove wrong class after animation
+                setTimeout(() => {
+                    selectedBtn.classList.remove('wrong');
+                    buttons.forEach(btn => btn.style.pointerEvents = 'auto');
+                }, 1000);
+            }
+        }
+        
+        function retryQuiz() {
+            wrongAnswerCount = 0; // Reset counter
+            // Reset all questions to first one
+            document.querySelectorAll('.question').forEach(q => q.classList.remove('active'));
+            document.getElementById('q1').classList.add('active');
+            // Clear all error messages
+            document.querySelectorAll('.error-msg').forEach(e => e.textContent = '');
+            goToPage('page2');
+        }
+        
+        function checkQ1() {
+            // Removed - now using checkAnswer
+        }
+        
+        function checkQ2() {
+            // Removed - now using checkAnswer
+        }
+        
+        function checkQ3() {
+            // Removed - now using checkAnswer
+        }
+        
+        function checkQ4() {
+            const input = document.getElementById('favTime').value.trim();
+            const error = document.getElementById('error4');
+            
+            if (input.length > 0) {
+                error.style.color = '#00cc00';
+                error.textContent = 'This answer just made me smile like an idiot 💕';
+                setTimeout(() => nextQuestion('q4', 'q5'), 1500);
+            } else {
+                error.textContent = 'Come on, tell me something 🥰';
+            }
+        }
+        
+        function checkQ5() {
+            const input = document.getElementById('likeAbout').value.trim();
+            const error = document.getElementById('error5');
+            
+            if (input.length > 0) {
+                error.style.color = '#00cc00';
+                error.textContent = "Okay wow… I'm blushing now 😳💖";
+                setTimeout(() => goToPage('page3'), 2000);
+            } else {
+                error.textContent = 'Please… I need to know 🥺';
+            }
+        }
+        
+        function nextQuestion(current, next) {
+            document.getElementById(current).classList.remove('active');
+            document.getElementById(next).classList.add('active');
+        }
+        
+        function goToPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        function goToPage4() {
+            goToPage('page4');
+        }
+        
+        // Valentine Page Logic
+        let noClickCount = 0;
+        const teaseMessages = [
+            "Are you sure? 🥺",
+            "Think again, Piggy 😏",
+            "My heart is crying 😭",
+            "This NO button is getting tired",
+            "Just say YES already 😩💘",
+            "Okay this is getting embarrassing for NO 🙈",
+            "System warning ⚠️ NO button running out of confidence",
+            "The NO button wants to give up",
+            "Even the NO button knows you should say YES 💖"
+        ];
+        
+        function handleNo() {
+            noClickCount++;
+            const yesBtn = document.getElementById('yesBtn');
+            const noBtn = document.getElementById('noBtn');
+            const teaseText = document.getElementById('teaseText');
+            
+            // Grow YES button
+            const currentSize = parseFloat(getComputedStyle(yesBtn).fontSize);
+            yesBtn.style.fontSize = (currentSize + 5) + 'px';
+            
+            // Shrink NO button
+            const currentNoSize = parseFloat(getComputedStyle(noBtn).fontSize);
+            noBtn.style.fontSize = Math.max(currentNoSize - 3, 12) + 'px';
+            
+            // Move NO button randomly
+            const container = document.querySelector('.button-container');
+            const containerRect = container.getBoundingClientRect();
+            const randomX = Math.random() * (containerRect.width - 100) - (containerRect.width/2 - 50);
+            const randomY = Math.random() * 100 - 50;
+            
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            // Show tease message
+            const msgIndex = Math.min(noClickCount - 1, teaseMessages.length - 1);
+            teaseText.textContent = teaseMessages[msgIndex];
+        }
+        
+        function handleYes() {
+            createMassiveCelebration();
+            setTimeout(() => goToPage('page5'), 1000);
+        }
+        
+        // Confetti effect
+        function createConfetti() {
+            const colors = ['#ff1493', '#ff69b4', '#ffb6d9', '#ff0066', '#ff3399'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() + 's';
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+        
+        function createMassiveCelebration() {
+            // Hearts everywhere
+            const hearts = ['💖', '💕', '💗', '💝', '💘', '❤️', '💓'];
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'celebration-heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = Math.random() * 100 + '%';
+                    document.body.appendChild(heart);
+                    setTimeout(() => heart.remove(), 2000);
+                }, i * 50);
+            }
+            
+            // Confetti
+            createConfetti();
+        }
+        
+        // Enter key support
+        document.getElementById('secretInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkEntry();
+        });
+    </script>
+</body>
+</html>
